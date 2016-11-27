@@ -1,0 +1,69 @@
+{% extends "_layout.html" %}
+{% block title %} Privacy Policy - SpaceWiki{% endblock %}
+
+{% block content %}
+<div class="small-12 columns">
+This document describes what information we collect and what it’s used for. It
+applies to all interactions with spacewiki.io. Your use of spacewiki.io
+services will constitute your agreement to our Privacy Policy.  Please also
+review our <a href="{{url_for('routes.tos')}}">Terms of Service</a>.
+
+<h2>Summary</h2>
+You have a reasonable expectation of privacy regarding any communication or
+data transiting or stored on this information system. We collect very little
+personal information, and none of the information we do collect is ever shared.
+
+<h2>Information we collect and retain</h2>
+
+<h3>Registration information</h3>
+When you sign in to SpaceWiki or add SpaceWiki to your team, we retain data
+provided to us by the Slack API. This is limited to display names, user names,
+Slack API identifiers for users and teams, and email addresses.
+
+<h3>Page Editing</h3>
+The history of all edits to all pages on your team are retained until your
+team's wiki is deleted. In addition to associating edits to a Slack API
+identifier, the date and time of each edit is collected.
+
+<h3>Session Identifiers</h3>
+While currently logged in, we keep a temporary session identifier on your
+computer that your software uses to prove your authentication state. This is
+erased immediately after you log out or the session expires. We do not use any
+third party cookies or tracking of any kind, except those furnished by
+Stripe.js during the payment processing of a team's initial setup.
+
+<h2>Information we choose to not retain</h2>
+
+<h3>IP addresses</h3>
+No IP addresses of any user for any service are retained.
+
+<h3>Browser fingerprint</h3>
+Your web browser communicates uniquely identifying information to all web
+servers it visits by allowing the site to know details about your operating
+system, browser information, plugins installed, fonts installed, screen
+resolution, and much more. We do not retain any of this information.
+
+<h2>How we store and share collected information</h2>
+<h3>Encryption</h3>
+All of your data is stored in an unencrypted format on disk, however our servers
+only communicate across the public internet using SSL encryption.  SpaceWiki
+will store all data in an encrypted format prior to exiting our public Alpha
+access period.
+
+<h3>We do not share user information</h3>
+We retain only the bare minimum of information about each user that is required
+to make the service work. We do not sell or share any of it.
+
+<h3>Account deletion</h3>
+You may choose to delete your SpaceWiki.io team at any time. Doing so will
+destroy all the data we retain that is associated with your team. Team 
+deletion is currently performed manually, and on written request to
+support@spacewiki.io.
+
+<h2>Changes to this policy</h2>
+We reserve the right to change this policy. If we make major changes, we will
+notify our users in a clear and prominent manner. Minor changes may only be
+highlighted in the footer of our website.
+
+</div>
+{% endblock %}

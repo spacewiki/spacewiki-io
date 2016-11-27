@@ -1,0 +1,8 @@
+peewee
+Flask
+Flask-Script
+Flask-Assets
+Flask-Login
+slacker
+stripe
+psycopg2

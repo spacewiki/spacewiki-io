@@ -1,0 +1,28 @@
+spacewiki_io_css:
+  filters: libsass,cssmin
+  output: cache/spacewiki-io-app.css
+  contents:
+    - scss/spacewiki-io.scss
+css:
+  filters: libsass,cssmin
+  output: cache/app.css
+  contents:
+    - scss/app.scss
+    - scss/simplemde.min.css
+requirejs:
+  output: cache/require.js
+  filters: rjsmin
+  contents:
+    - js/lib/require.js
+javascript:
+  output: cache/app.js
+  filters: requirejs
+  contents:
+    - jquery.js
+    - js/lib/lightbox.js
+    - js/lib/simplemde.js
+    - js/lib/foundation/foundation.js
+    - js/lib/foundation/foundation.dropdown.js
+    - js/lib/foundation/foundation.topbar.js
+    - js/editor.js
+    - js/lightbox.js
