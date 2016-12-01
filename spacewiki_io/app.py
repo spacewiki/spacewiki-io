@@ -1,7 +1,8 @@
 import logging.config
 from flask_assets import Environment
 from flask import Flask
-from spacewiki_io import model, routes, signin, io_common, deadspace
+from spacewiki_io import model, routes, signin, io_common, deadspace, \
+    slack_events
 from spacewiki.middleware import ReverseProxied
 from slacker import Slacker
 import peewee
@@ -27,12 +28,12 @@ def create_app(with_config=True):
     APP.register_blueprint(model.BLUEPRINT)
     APP.register_blueprint(signin.BLUEPRINT)
     APP.register_blueprint(io_common.BLUEPRINT)
+    APP.register_blueprint(slack_events.BLUEPRINT, url_prefix='/slack-events')
 
     if 'LOG_CONFIG' in APP.config:
         logging.config.dictConfig(APP.config['LOG_CONFIG'])
 
     sentry = Sentry(APP)
-
     return APP
 
 def create_deadspace_app():
