@@ -1,12 +1,9 @@
 from flask import Blueprint, current_app, render_template, url_for, redirect,\
     request, session, flash
-from slacker import Slacker, Error
+from slacker import Error
 from flask_login import login_user
-import model, dispatcher
+import model, dispatcher, slack
 import peewee
-import spacewiki.model
-import stripe
-import slack
 
 BLUEPRINT = Blueprint('routes', __name__, template_folder='templates')
 
@@ -47,60 +44,12 @@ def add_to_slack():
     if space.active:
         space.make_space_database()
         return redirect('https://%s.spacewiki.io/'%(space.domain))
-    session['slack_team'] = slack_team['team']['id']
-    return redirect(url_for('routes.signup'))
-
-@BLUEPRINT.route('/signup')
-def signup():
-    return render_template('signup.html')
-
-@BLUEPRINT.route('/signup/<plan>')
-def choose_plan(plan):
-    slack_team_id = session.get('slack_team', None)
-    space = model.Space.get(slack_team_id=slack_team_id)
-    session['plan_type'] = plan
-    if plan == 'free':
-        space.active = True
-        space.save()
-        return redirect(url_for('routes.finished'))
-    return render_template('pay.html', plan=plan, space=space)
-
-@BLUEPRINT.route('/payment', methods=['POST'])
-def payment():
-    slack_team_id = session.get('slack_team', None)
-    plan_type = session.get('plan_type', None)
-    space = model.Space.get(slack_team_id=slack_team_id)
-    subscription_id = None
-    if plan_type == 'startup':
-        subscription_id = 'startup'
-    if plan_type == 'corporate':
-        subscription_id = 'corporate'
-    stripe.api_key = current_app.config['STRIPE_SECRET_KEY']
-
-    stripe_token = request.form['stripeToken']
-
-    if space.stripe_customer_id == '':
-        customer = stripe.Customer.create(source=stripe_token)
-        space.stripe_customer_id = customer.id
-    
-    current_app.logger.debug("Processing new subscription for %s plan", plan_type)
-    # plan == None means they picked the 'donate' button
-    if subscription_id is not None:
-        sub = stripe.Subscription.create(
-            customer = space.stripe_customer_id,
-            plan=subscription_id
-        )
-        space.stripe_subscription_id = sub.id
-    else:
-        donation_value = int(float(request.form['donationValue']) * 100)
-        stripe.Charge.create(
-            customer = space.stripe_customer_id,
-            amount = donation_value,
-            currency = 'USD'
-        )
-
+    # TODO: This is where we'd redirect to the signup workflow if the space
+    # needs activation.
     space.active = True
     space.save()
+    space.make_space_database()
+    session['slack_team'] = slack_team['team']['id']
     return redirect(url_for('routes.finished'))
 
 @BLUEPRINT.route('/welcome')
@@ -108,4 +57,3 @@ def finished():
     slack_team_id = session.get('slack_team', None)
     space = model.Space.get(slack_team_id=slack_team_id)
     return render_template('finished.html', space=space)
-

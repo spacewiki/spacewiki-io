@@ -6,7 +6,7 @@
   <div class="row">
     <div class="small-12 columns">
       <h2>Payment</h2>
-      <form id="paymentForm" action="{{url_for('routes.payment')}}" method="POST">
+      <form id="paymentForm" action="{{url_for('signup.payment')}}" method="POST">
         <input type="hidden" name="stripeToken" id="stripeToken">
         {% if plan == 'donate' %}
         <input type="text" id="donationValue" name="donationValue">
