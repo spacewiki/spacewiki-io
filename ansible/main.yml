@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   vars_files:
-    - private.yml
+    - private/private.yml
   tasks:
     - name: Install required packages
       dnf: name={{item}} state=present
@@ -19,6 +19,9 @@
       notify: Reload nginx
     - name: Install SSL key
       copy: src=private/spacewiki.io.key dest=/srv/spacewiki/tls/spacewiki.io.key
+      notify: Reload nginx
+    - name: Install SSL DH params
+      copy: src=private/spacewiki.io.dhparams dest=/srv/spacewiki/tls/spacewiki.io.dhparams
       notify: Reload nginx
     - name: Install local_hosted_settings.py
       template: src=local_hosted_settings.py dest=/srv/spacewiki/app/local_hosted_settings.py
