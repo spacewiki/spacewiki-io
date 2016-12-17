@@ -9,17 +9,20 @@ import spacewiki.app
 import spacewiki.model
 import spacewiki.auth
 import io_wrapper, deadspace, app, signin
+from raven.contrib.flask import Sentry
 
 logger = logging.getLogger('dispatcher')
 
 def make_wiki_app(space):
     space_app = spacewiki.app.create_app()
     space_app.secret_key = current_app.secret_key
+    space_app.config['SENTRY_DSN'] = current_app.config['SENTRY_DSN']
     space_app.config['SLACK_KEY']  = current_app.config['SLACK_KEY']
     space_app.config['DATABASE_URL'] = space.db_url
     space_app.config['SITE_NAME'] = space.domain
     space_app.config['UPLOAD_PATH'] = '/srv/spacewiki/uploads/%s'%(space.domain)
     space_app.config['ASSETS_CACHE'] = '/tmp/'
+    sentry = Sentry(space_app)
     space_app.register_blueprint(io_wrapper.BLUEPRINT)
     space_app.logger.setLevel(logging.DEBUG)
     space.make_space_database()
