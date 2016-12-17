@@ -1,0 +1,14 @@
+[Unit]
+Name=spcewiki.io
+
+[Service]
+User=spacewiki
+Group=spacewiki
+WorkingDirectory=/srv/spacewiki/io-app/
+ExecStart=/srv/spacewiki/virtualenv/guincorn spacewiki_io
+Requires=postgresql.service
+After=postgresql.service
+Before=nginx.service
+
+[Install]
+WantedBy=default.target

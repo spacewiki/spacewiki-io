@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - private.yml
+  tasks:
+    - name: Install required packages
+      dnf: name={{item}} state=present
+      with_items:
+        - libselinux-python
+        - python-dnf
+    - name: Install spacewiki.io service
+      copy: src=spacewiki-io.service dest=/usr/lib/systemd/system/spacewiki-io.service
+    - name: Install nginx config
+      copy: src=nginx.conf dest=/etc/nginx/conf.d/spacewiki-io.conf
+      notify: Reload nginx
+    - name: Install SSL cert
+      copy: src=private/spacewiki.io.crt dest=/srv/spacewiki/tls/spacewiki.io.crt
+      notify: Reload nginx
+    - name: Install SSL key
+      copy: src=private/spacewiki.io.key dest=/srv/spacewiki/tls/spacewiki.io.key
+      notify: Reload nginx
+    - name: Install local_hosted_settings.py
+      template: src=local_hosted_settings.py dest=/srv/spacewiki/app/local_hosted_settings.py
+      notify: Restart spacewiki.io
+  handlers:
+    - name: Restart spacewiki.io
+      service: name=spacewiki-io state=restarted
+    - name: Reload nginx
+      service: name=nginx state=reloaded
