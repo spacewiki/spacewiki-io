@@ -6,3 +6,5 @@ SLACK_VERIFICATION_TOKEN = '{{slack_verification_token}}'
 SECRET_SESSION_KEY = '{{secret_session_key}}'
 PREFERRED_URL_SCHEME = 'https'
 SESSION_COOKIE_DOMAIN = '.spacewiki.io'
+ADMIN_EMAILS = ['tdfischer@hackerbots.net']
+SENTRY_DSN = '{{sentry_dsn}}'
