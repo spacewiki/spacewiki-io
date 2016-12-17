@@ -16,7 +16,9 @@ logger = logging.getLogger('dispatcher')
 def make_wiki_app(space):
     space_app = spacewiki.app.create_app()
     space_app.secret_key = current_app.secret_key
-    space_app.config['SENTRY_DSN'] = current_app.config['SENTRY_DSN']
+    sentry_dsn = current_app.config.get('SENTRY_DSN', None)
+    if sentry_dsn is not None:
+        space_app.config['SENTRY_DSN'] = current_app.config['SENTRY_DSN']
     space_app.config['SLACK_KEY']  = current_app.config['SLACK_KEY']
     space_app.config['DATABASE_URL'] = space.db_url
     space_app.config['SITE_NAME'] = space.domain
