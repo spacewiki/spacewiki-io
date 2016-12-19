@@ -28,16 +28,14 @@ class SubspaceConfig(Config):
         self['SLACK_ID'] = space.slack_team_id.lower()
         self['SITE_NAME'] = space.domain
         self['ASSETS_CACHE'] = '/tmp/'
-        #self['UPLOAD_PATH'] = '/srv/spacewiki/uploads/%s'%(space.domain)
-        #self['DATABASE_URL'] = space.db_url
 
     def __missing__(self, key):
         subkey = 'SUBSPACE_'+key
+        current_app.logger.debug('Looking up subspace key: %s', subkey)
         ret = self._template['SUBSPACE_'+key]
-        if '%s' in ret:
-            ret = ret % self['SLACK_ID']
+        ret = ret % self._replacements
         # Make sure we skip __missing__ next time
-        self[key] = ret % self._replacements
+        self[key] = ret
         return ret
 
 class Dispatcher(object):
@@ -60,10 +58,11 @@ class Dispatcher(object):
             self.instances[space.domain] = space_app
 
         # Configure
+        del space_app.config['DATABASE_URL']
         conf = SubspaceConfig(space, self.default_app.config)
         conf.from_mapping(**space_app.config)
         space_app.config = conf
-        space_app.secret_key = space_app.config['SECRET_KEY']
+        space_app.secret_key = self.default_app.secret_key
         space_app.logger.setLevel(logging.DEBUG)
 
         # Setup crash reporting
