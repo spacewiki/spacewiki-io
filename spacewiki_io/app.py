@@ -1,3 +1,4 @@
+import logging.config
 from flask_assets import Environment
 from flask import Flask
 from spacewiki_io import model, routes, signin, io_common
@@ -19,6 +20,7 @@ def create_app():
     APP.register_blueprint(model.BLUEPRINT)
     APP.register_blueprint(signin.BLUEPRINT)
     APP.register_blueprint(io_common.BLUEPRINT)
+    logging.config.dictConfig(APP.config['LOG_CONFIG'])
 
     sentry = Sentry(APP)
 
