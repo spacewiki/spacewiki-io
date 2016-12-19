@@ -1,6 +1,8 @@
 SLACK_KEY = None
 SLACK_SECRET = None
-SPACE_DB_URL_PATTERN = 'postgres:///%s'
+SUBSPACE_DATABASE_NAME = '%(slack_id)s'
+SUBSPACE_DATABASE_URL = 'postgres:///' + SUBSPACE_DATABASE_NAME
+SUBSPACE_UPLOAD_PATH = 'uploads/%(slack_id)s'
 ADMIN_DB_URL = 'postgres:///spacewiki'
 IO_DOMAIN = 'spacewiki.io'
 IO_SCHEME = 'https'
