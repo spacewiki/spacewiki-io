@@ -6,5 +6,14 @@ SLACK_VERIFICATION_TOKEN = '{{slack_verification_token}}'
 SECRET_SESSION_KEY = '{{secret_session_key}}'
 PREFERRED_URL_SCHEME = 'https'
 SESSION_COOKIE_DOMAIN = '.spacewiki.io'
-ADMIN_EMAILS = ['tdfischer@hackerbots.net']
 SENTRY_DSN = '{{sentry_dsn}}'
+IO_DOMAIN = 'spacewiki.io'
+IO_SCHEME = 'https'
+
+SUBSPACE_SLACK_KEY = SLACK_KEY
+SUBSPACE_SLACK_SECRET = SLACK_SECRET
+SUBSPACE_SLACK_VERIFICATION_TOKEN = SLACK_SECRET
+SUBSPACE_SECRET_KEY = SECRET_SESSION_KEY
+SUBSPACE_DATABASE_NAME = 'spacewiki_site_%(slack_id)s'
+SUBSPACE_DATABASE_URL = 'postgres://postgres:postgres@localhost/' + SUBSPACE_DATABASE_NAME
+SUBSPACE_UPLOAD_PATH = '/srv/spacewiki/uploads/%(domain)s'
