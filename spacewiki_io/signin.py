@@ -17,7 +17,6 @@ def slack_login():
         return redirect(url_for('routes.index'))
     space = model.Space.from_user_slacker(slacker)
     if space is not None:
-        space.make_space_database()
         slack.login_from_user_slacker(slacker)
         req_host = request.host.split(':', 1)
         if len(req_host) == 2:
