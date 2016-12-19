@@ -2,6 +2,8 @@ SLACK_KEY = None
 SLACK_SECRET = None
 SPACE_DB_URL_PATTERN = 'postgres:///%s'
 ADMIN_DB_URL = 'postgres:///spacewiki'
+IO_DOMAIN = 'spacewiki.io'
+IO_SCHEME = 'https'
 DEADSPACE = False
 LOGIN_NEEDED = False
 

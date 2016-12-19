@@ -1,6 +1,7 @@
-from flask import Blueprint, redirect, url_for, flash
+from flask import Blueprint, redirect, url_for, flash, request
 from slacker import Error
 import slack, dispatcher, model
+import settings as SETTINGS
 
 BLUEPRINT = Blueprint('signin', __name__, template_folder='templates')
 
@@ -18,7 +19,13 @@ def slack_login():
     if space is not None:
         space.make_space_database()
         slack.login_from_user_slacker(slacker)
-        return redirect('https://%s.spacewiki.io/'%(space.domain))
+        req_host = request.host.split(':', 1)
+        if len(req_host) == 2:
+            port = ':'+req_host[1]
+        else:
+            port = ''
+        return redirect('%s://%s.%s/'%(SETTINGS.IO_SCHEME, space.domain,
+            SETTINGS.IO_DOMAIN+port))
     else:
         flash("Your team doesn't have a wiki yet!")
         return redirect(url_for('routes.index'))
