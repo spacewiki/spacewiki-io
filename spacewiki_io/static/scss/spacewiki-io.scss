@@ -53,9 +53,21 @@ header {
 
 .pricing {
   text-align: center;
+  padding: .5%;
+
+  .cmid{
+    box-shadow: -10px 8px 20px;
+    border-radius: 20px;
+    color: #020E19;
+    transform: scale(1,1.1);
+    background-color: rgba(darken($primary-color, 0.75), 1.0);
+    margin: 1%;
+  }
+
 
   h2 {
     color: #fff;
+    text-shadow: 2px 2px 2px #333;
   }
 
   h3 {
@@ -73,14 +85,14 @@ header {
   }
 
   li {
-    background-color: rgba($secondary-color, 0.75);
+    background-color: $secondary-color;
     color: #000;
     font-size: larger;
     padding: 0.5em;
   }
 
   li:nth-child(2) {
-    background-color: rgba(lighten(#fff, 25%), 0.75);
+    background-color: lighten(#fff, 25%);
   }
 
   .the-price {
