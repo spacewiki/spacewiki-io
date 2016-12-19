@@ -8,7 +8,7 @@ import peewee
 import spacewiki.app
 import spacewiki.model
 import spacewiki.auth
-import io_wrapper, deadspace, app, signin
+import io_wrapper, deadspace, app, signin, io_common
 from raven.contrib.flask import Sentry
 
 logger = logging.getLogger('dispatcher')
@@ -26,6 +26,7 @@ def make_wiki_app(space):
     space_app.config['ASSETS_CACHE'] = '/tmp/'
     sentry = Sentry(space_app)
     space_app.register_blueprint(io_wrapper.BLUEPRINT)
+    space_app.register_blueprint(io_common.BLUEPRINT)
     space_app.logger.setLevel(logging.DEBUG)
     space.make_space_database()
     with space_app.app_context():

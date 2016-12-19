@@ -2,7 +2,7 @@ spacewiki_io_css:
   filters: libsass,cssmin
   output: cache/spacewiki-io-app.css
   contents:
-    - scss/spacewiki-io.scss
+    - io_common/scss/spacewiki-io.scss
 css:
   filters: libsass,cssmin
   output: cache/app.css
