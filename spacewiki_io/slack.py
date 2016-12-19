@@ -31,7 +31,7 @@ def login_from_user_slacker(slacker):
     slack_id = user_id['user']['id']
     display_name = user_id['user']['name']
     space = model.Space.from_user_slacker(slacker)
-    space_app = dispatcher.make_wiki_app(space)
+    space_app = dispatcher.DISPATCHER.get_wiki_app(space)
     with space_app.app_context():
         user_id = login_slack_id(slack_id)
         user_id.display_name = display_name

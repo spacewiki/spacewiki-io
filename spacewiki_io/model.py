@@ -1,7 +1,5 @@
 import peewee
-from playhouse.db_url import parse as parse_db_url
 from playhouse.db_url import connect
-import psycopg2
 from flask import g, current_app, Blueprint
 import dispatcher
 
@@ -27,33 +25,6 @@ class Space(BaseModel):
     active = peewee.BooleanField(default=False)
     stripe_customer_id = peewee.CharField(default='')
     stripe_subscription_id = peewee.CharField(default='')
-
-    @property
-    def db_name(self):
-        return "spacewiki_site_%s" % self.slack_team_id.lower()
-
-    @property
-    def db_url(self):
-        return current_app.config['SPACE_DB_URL_PATTERN'] % self.db_name
-
-    def make_space_database(self):
-        parsed = parse_db_url(current_app.config['ADMIN_DB_URL'])
-        db_string = 'dbname=%s'%(parsed['database'])
-        if 'host' in parsed:
-            db_string += ' host='+parsed['host']
-        if 'user' in parsed:
-            db_string += ' user='+parsed['user']
-        if 'password' in parsed:
-            db_string += ' password='+parsed['password']
-        db = psycopg2.connect(db_string)
-        db.autocommit = True
-        cur = db.cursor()
-        try:
-            cur.execute("CREATE DATABASE %s" % self.db_name)
-            current_app.logger.info("Created new database for team %s", self)
-        except psycopg2.ProgrammingError:
-            current_app.logger.debug("Team %s already has a database.", self)
-            pass
 
     @staticmethod
     def from_team_slacker(slacker):

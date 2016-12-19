@@ -1,20 +1,25 @@
 import logging.config
 from flask_assets import Environment
 from flask import Flask
-from spacewiki_io import model, routes, signin, io_common
+from spacewiki_io import model, routes, signin, io_common, deadspace
 from spacewiki.middleware import ReverseProxied
 from slacker import Slacker
 import peewee
 from raven.contrib.flask import Sentry
 
-
-def create_app():
+def create_base_app():
     APP = Flask(__name__)
     APP.config.from_object('spacewiki_io.settings')
     ASSETS = Environment(APP)
     ASSETS.from_yaml("assets.yml")
     APP.secret_key = APP.config['SECRET_SESSION_KEY']
     APP.wsgi_app = ReverseProxied(APP.wsgi_app)
+    APP.register_blueprint(io_common.BLUEPRINT)
+    Sentry(APP)
+    return APP
+
+def create_app():
+    APP = create_base_app()
 
     APP.register_blueprint(routes.BLUEPRINT)
     APP.register_blueprint(model.BLUEPRINT)
@@ -25,3 +30,8 @@ def create_app():
     sentry = Sentry(APP)
 
     return APP
+
+def create_deadspace_app():
+    deadspace_app = create_base_app()
+    deadspace_app.register_blueprint(deadspace.BLUEPRINT)
+    return deadspace_app
