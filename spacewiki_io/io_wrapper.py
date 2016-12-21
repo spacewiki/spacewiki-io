@@ -3,7 +3,6 @@ from flask_login import current_user, login_user
 import peewee
 import app, model
 import spacewiki.model
-import settings as SETTINGS
 
 BLUEPRINT = Blueprint('io_wrapper', __name__, template_folder='templates')
 
@@ -20,19 +19,3 @@ def confirm_logged_in():
     if not current_user.is_authenticated:
         if not request.path.startswith('/static'):
             return render_template('private.html')
-
-def try_io_url(error, endpoint, values):
-    mgmt_app = app.create_app()
-    values.pop('_external', None)
-    req_host = request.host.split(':', 1)
-    if len(req_host) == 2:
-        port = ':'+req_host[1]
-    else:
-        port = ''
-    urls = mgmt_app.url_map.bind(SETTINGS.IO_DOMAIN+port, "/",
-            url_scheme=SETTINGS.IO_SCHEME)
-    return urls.build(endpoint, values, force_external=True)
-
-@BLUEPRINT.before_app_first_request
-def configure_url_handler():
-    current_app.url_build_error_handlers.append(try_io_url)
