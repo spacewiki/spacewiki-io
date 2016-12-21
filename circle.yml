@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - pip install nose coverage
+    - npm install -g requirejs
+test:
+  override:
+    - nosetests --with-coverage --cover-html --cover-package=spacewiki_io --cover-erase
