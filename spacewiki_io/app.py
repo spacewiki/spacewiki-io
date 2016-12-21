@@ -12,7 +12,6 @@ def create_base_app():
     APP.config.from_object('spacewiki_io.settings')
     ASSETS = Environment(APP)
     ASSETS.from_yaml("assets.yml")
-    APP.secret_key = APP.config['SECRET_SESSION_KEY']
     APP.wsgi_app = ReverseProxied(APP.wsgi_app)
     APP.register_blueprint(io_common.BLUEPRINT)
     Sentry(APP)
