@@ -97,13 +97,14 @@ class Dispatcher(object):
             current_app.logger.debug("Team %s already has a database.", self)
 
     def get_application(self, host):
-        logger.debug("Got request for %s while serving %s", host, self.domain)
+        domain = self.default_app.config['IO_DOMAIN']
+        logger.debug("Got request for %s while serving %s", host, domain)
         host = host.split(':')[0]
 
-        if not host.endswith(self.domain):
+        if not host.endswith(domain):
             return self.default_app
 
-        subdomain = host[:-len(self.domain)].rstrip('.')
+        subdomain = host[:-len(domain)].rstrip('.')
 
         if subdomain == '':
             return self.default_app
