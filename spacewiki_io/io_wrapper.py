@@ -9,9 +9,8 @@ BLUEPRINT = Blueprint('io_wrapper', __name__, template_folder='templates')
 
 @BLUEPRINT.before_app_request
 def confirm_logged_in():
-    common_user = session.get('_spacewikiio_auth_id', None)
+    common_user = session.pop('_spacewikiio_auth_id', None)
     if common_user is not None:
-        del session['_spacewikiio_auth_id']
         try:
             u = spacewiki.model.Identity.get(spacewiki.model.Identity.auth_id ==
                     common_user, spacewiki.model.Identity.auth_type == 'slack')
