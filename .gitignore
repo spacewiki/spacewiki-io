@@ -8,3 +8,5 @@ uploads
 .coverage
 npm-debug.log
 .sass-cache
+cover
+local_hosted_settings.py
