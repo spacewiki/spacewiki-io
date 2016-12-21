@@ -95,5 +95,5 @@ class DispatcherTestCase(unittest.TestCase):
             self.assertEqual(subdomain_app, self.dispatcher.deadspace_app)
 
             subdomain_client = subdomain_app.test_client()
-            self.assertEqual(subdomain_client.get('/').status_code, 200)
+            self.assertEqual(subdomain_client.get('/').status_code, 404)
             self.assertEqual(subdomain_client.get('/static/cache/spacewiki-io-app.css').status_code, 200)
