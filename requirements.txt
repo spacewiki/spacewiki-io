@@ -6,3 +6,4 @@ Flask-Login
 slacker
 stripe
 psycopg2
+raven[flask]
