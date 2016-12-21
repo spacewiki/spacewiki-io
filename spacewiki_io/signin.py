@@ -1,7 +1,6 @@
-from flask import Blueprint, redirect, url_for, flash, request
+from flask import Blueprint, redirect, url_for, flash, request, current_app
 from slacker import Error
 import slack, dispatcher, model
-import settings as SETTINGS
 
 BLUEPRINT = Blueprint('signin', __name__, template_folder='templates')
 
@@ -23,8 +22,8 @@ def slack_login():
             port = ':'+req_host[1]
         else:
             port = ''
-        return redirect('%s://%s.%s/'%(SETTINGS.IO_SCHEME, space.domain,
-            SETTINGS.IO_DOMAIN+port))
+        return redirect('%s://%s.%s/'%(current_app.config['IO_SCHEME'], space.domain,
+            current_app.config['IO_DOMAIN']+port))
     else:
         flash("Your team doesn't have a wiki yet!")
         return redirect(url_for('routes.index'))
