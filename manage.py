@@ -18,13 +18,11 @@ def runserver():
 
 @MANAGER.command
 def reset():
-    model.get_db()
     model.Space.delete()
     syncdb()
 
 @MANAGER.command
 def syncdb():
-    model.get_db()
     model.ADMIN_DATABASE.create_tables([model.Space], True)
 
 if __name__ == "__main__":

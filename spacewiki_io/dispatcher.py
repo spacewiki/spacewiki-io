@@ -110,7 +110,6 @@ class Dispatcher(object):
             return self.default_app
 
         with self.default_app.app_context():
-            model.get_db()
             try:
                 space = model.Space.get(domain=subdomain)
             except peewee.DoesNotExist:

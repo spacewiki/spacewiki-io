@@ -2,17 +2,18 @@ import peewee
 from playhouse.db_url import connect
 from flask import g, current_app, Blueprint
 import dispatcher
+from werkzeug import LocalProxy
 
 BLUEPRINT = Blueprint('model', __name__)
 
-@BLUEPRINT.before_app_request
+#@BLUEPRINT.before_app_request
 def get_db():
-    db = getattr(g, '_database', None)
+    db = g.get('_database', None)
     if db is None:
         g._database = db = connect(current_app.config['ADMIN_DB_URL'])
-    ADMIN_DATABASE.initialize(db)
+    return g._database
 
-ADMIN_DATABASE = peewee.Proxy()
+ADMIN_DATABASE = LocalProxy(get_db)
 
 class BaseModel(peewee.Model):
     class Meta:
