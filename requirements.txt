@@ -6,4 +6,5 @@ Flask-Login
 slacker
 stripe
 psycopg2
+raven[flask]
 -e git://github.com/spacewiki/spacewiki@master#egg=spacewiki
