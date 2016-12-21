@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - pip install nose
+    - npm install -g requirejs
+test:
+  override:
+    - nosetests
