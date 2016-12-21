@@ -45,7 +45,7 @@ class Dispatcher(object):
         self.deadspace_app = app.create_deadspace_app()
         self.domain = self.default_app.config['IO_DOMAIN']
 
-    def get_wiki_app(self, space):
+    def get_wiki_app(self, space, create_db=True):
         with self.lock:
             space_app = self.instances.get(space.domain)
 
@@ -72,8 +72,9 @@ class Dispatcher(object):
         space_app.register_blueprint(io_common.BLUEPRINT)
 
         # Boot database
-        db_name = space_app.config['DATABASE_NAME']
-        self.create_database(db_name)
+        if create_db:
+            db_name = space_app.config['DATABASE_NAME']
+            self.create_database(db_name)
         with space_app.app_context():
             spacewiki.model.syncdb()
         return space_app
