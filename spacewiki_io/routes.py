@@ -7,10 +7,6 @@ import peewee
 
 BLUEPRINT = Blueprint('routes', __name__, template_folder='templates')
 
-@BLUEPRINT.app_context_processor
-def add_site_settings():
-    return dict(settings=current_app.config)
-
 @BLUEPRINT.route('/')
 def index(path=None):
         return render_template('index.html')
