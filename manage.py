@@ -2,7 +2,6 @@
 from flask_script import Manager, Shell, Server
 from spacewiki_io import app, model, dispatcher
 import logging
-import colorlog
 import os
 
 APP = app.create_app()
@@ -13,7 +12,7 @@ MANAGER.add_command('shell', Shell())
 def runserver():
     from gevent.wsgi import WSGIServer
     serv = WSGIServer(('', int(os.environ.get('PORT', 5000))),
-            dispatcher.DISPATCHER, log=logging.getLogger("http"))
+            dispatcher.Dispatcher(), log=logging.getLogger("http"))
     serv.serve_forever()
 
 @MANAGER.command

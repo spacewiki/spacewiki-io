@@ -1,5 +1,6 @@
-from flask import Blueprint, redirect, url_for, flash, request, current_app
+from flask import Blueprint, redirect, url_for, flash, request, current_app, g
 from slacker import Error
+from werkzeug import Local, LocalProxy
 import slack, dispatcher, model
 
 BLUEPRINT = Blueprint('signin', __name__, template_folder='templates')
@@ -16,7 +17,7 @@ def slack_login():
         return redirect(url_for('routes.index'))
     space = model.Space.from_user_slacker(slacker)
     if space is not None:
-        slack.login_from_user_slacker(slacker)
+        dispatcher.current_dispatcher.login_from_user_slacker(slacker)
         req_host = request.host.split(':', 1)
         if len(req_host) == 2:
             port = ':'+req_host[1]
@@ -27,4 +28,3 @@ def slack_login():
     else:
         flash("Your team doesn't have a wiki yet!")
         return redirect(url_for('routes.index'))
-

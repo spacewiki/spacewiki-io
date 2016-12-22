@@ -4,7 +4,7 @@ from spacewiki_io import model, routes
 from playhouse.db_url import parse as parse_db_url
 import psycopg2
 from flask import current_app, session, request, render_template, url_for, \
-    Config
+    Config, g
 from flask.globals import _request_ctx_stack
 from flask_login import current_user, login_user
 import peewee
@@ -12,9 +12,14 @@ import spacewiki.app
 import spacewiki.model
 import spacewiki.auth
 import io_wrapper, deadspace, app, signin, io_common
+from werkzeug import LocalStack, LocalProxy
 from raven.contrib.flask import Sentry
+from contextlib import contextmanager
 
 logger = logging.getLogger('dispatcher')
+
+local_dispatcher = LocalStack()
+current_dispatcher = local_dispatcher()
 
 class SubspaceConfig(Config):
     def __init__(self, space, template):
@@ -38,10 +43,14 @@ class SubspaceConfig(Config):
         return ret
 
 class Dispatcher(object):
-    def __init__(self):
+
+    def __init__(self, default_app=None):
         self.lock = Lock()
         self.instances = {}
-        self.default_app = app.create_app()
+        if default_app is None:
+            self.default_app = app.create_app()
+        else:
+            self.default_app = default_app
         self.deadspace_app = app.create_deadspace_app()
         self.domain = self.default_app.config['IO_DOMAIN']
 
@@ -119,8 +128,40 @@ class Dispatcher(object):
 
             return self.get_wiki_app(space)
 
-    def __call__(self, environ, start_response):
-        app = self.get_application(environ['HTTP_HOST'])
-        return app(environ, start_response)
+    def login_slack_id(self, slack_id):
+        try:
+            identity = spacewiki.model.Identity.get(spacewiki.model.Identity.auth_id == slack_id,
+                    spacewiki.model.Identity.auth_type == 'slack')
+        except:
+            identity = spacewiki.model.Identity.create(
+                    auth_id=slack_id,
+                    auth_type='slack',
+                    display_name='',
+                    handle=slack_id
+            )
+        session['_spacewikiio_auth_id'] = slack_id
+        return identity
 
-DISPATCHER = Dispatcher()
+    def login_from_user_slacker(self, slacker):
+        user_id = slacker.api.get('users.identity').body
+        #handle = slacker.api.get('auth.test').body['user']
+        slack_id = user_id['user']['id']
+        display_name = user_id['user']['name']
+        space = model.Space.from_user_slacker(slacker)
+        space_app = current_dispatcher.get_wiki_app(space)
+        with space_app.app_context():
+            user_id = self.login_slack_id(slack_id)
+            user_id.display_name = display_name
+            #user_id.handle = handle
+            user_id.save()
+
+    @contextmanager
+    def dispatch_context(self):
+        local_dispatcher.push(self)
+        yield
+        local_dispatcher.pop()
+
+    def __call__(self, environ, start_response):
+        with self.dispatch_context():
+            app = self.get_application(environ['HTTP_HOST'])
+            return app(environ, start_response)

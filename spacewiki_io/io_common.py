@@ -4,7 +4,7 @@ import dispatcher
 BLUEPRINT = Blueprint('io_common', __name__, static_folder='static')
 
 def try_io_url(error, endpoint, values):
-    mgmt_app = dispatcher.DISPATCHER.default_app
+    mgmt_app = dispatcher.current_dispatcher.default_app
     values.pop('_external', None)
     req_host = request.host.split(':', 1)
     if len(req_host) == 2:
