@@ -1,7 +1,6 @@
 import peewee
 from playhouse.db_url import connect
 from flask import g, current_app, Blueprint
-import dispatcher
 
 BLUEPRINT = Blueprint('model', __name__)
 
