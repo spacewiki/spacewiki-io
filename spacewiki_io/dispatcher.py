@@ -31,7 +31,6 @@ class SubspaceConfig(Config):
 
     def __missing__(self, key):
         subkey = 'SUBSPACE_'+key
-        current_app.logger.debug('Looking up subspace key: %s', subkey)
         ret = self._template['SUBSPACE_'+key]
         ret = ret % self._replacements
         # Make sure we skip __missing__ next time
