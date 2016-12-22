@@ -7,9 +7,10 @@ from slacker import Slacker
 import peewee
 from raven.contrib.flask import Sentry
 
-def create_base_app():
+def create_base_app(with_config=True):
     APP = Flask(__name__)
-    APP.config.from_object('spacewiki_io.settings')
+    if with_config:
+        APP.config.from_object('spacewiki_io.settings')
     ASSETS = Environment(APP)
     ASSETS.from_yaml("assets.yml")
     APP.secret_key = APP.config['SECRET_SESSION_KEY']
@@ -18,14 +19,16 @@ def create_base_app():
     Sentry(APP)
     return APP
 
-def create_app():
-    APP = create_base_app()
+def create_app(with_config=True):
+    APP = create_base_app(with_config)
 
     APP.register_blueprint(routes.BLUEPRINT)
     APP.register_blueprint(model.BLUEPRINT)
     APP.register_blueprint(signin.BLUEPRINT)
     APP.register_blueprint(io_common.BLUEPRINT)
-    logging.config.dictConfig(APP.config['LOG_CONFIG'])
+
+    if 'LOG_CONFIG' in APP.config:
+        logging.config.dictConfig(APP.config['LOG_CONFIG'])
 
     sentry = Sentry(APP)
 
