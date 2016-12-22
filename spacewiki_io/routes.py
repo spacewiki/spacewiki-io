@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, url_for, redirect,\
     request, session, flash
 from slacker import Error
 from flask_login import login_user
-import model, dispatcher, slack
+import model, slack
 import peewee
 
 BLUEPRINT = Blueprint('routes', __name__, template_folder='templates')
@@ -22,12 +22,6 @@ def tos():
 @BLUEPRINT.route('/privacy')
 def privacy_policy():
     return render_template('privacy.html')
-
-def deadspace():
-    return render_template('deadspace.html')
-
-def private():
-    return render_template('private.html')
 
 @BLUEPRINT.route('/slack_add_flow')
 def add_to_slack():
