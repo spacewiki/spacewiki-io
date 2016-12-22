@@ -24,7 +24,7 @@
       copy: src=private/spacewiki.io.dhparams dest=/srv/spacewiki/tls/spacewiki.io.dhparams
       notify: Reload nginx
     - name: Install local_hosted_settings.py
-      template: src=local_hosted_settings.py dest=/srv/spacewiki/app/local_hosted_settings.py
+      template: src=local_hosted_settings.py dest=/srv/spacewiki/io-app/local_hosted_settings.py
       notify: Restart spacewiki.io
   handlers:
     - name: Restart spacewiki.io
