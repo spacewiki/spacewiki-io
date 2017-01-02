@@ -75,7 +75,7 @@ def on_message(space, event):
             matches.group('slug'))
     space_slacker = Slacker(space.slack_access_token)
     slug = matches.group('slug')
-    space_app = dispatcher.DISPATCHER.get_wiki_app(space)
+    space_app = dispatcher.current_dispatcher.get_wiki_app(space)
     with space_app.app_context():
         rev = spacewiki.model.Page.latestRevision(slug)
 
