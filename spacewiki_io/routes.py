@@ -32,13 +32,11 @@ def add_to_slack():
     space = model.Space.from_team_slacker(slacker)
     slack_team = slacker.api.get('team.info').body
     if space.active:
-        space.make_space_database()
         return redirect('https://%s.spacewiki.io/'%(space.domain))
     # TODO: This is where we'd redirect to the signup workflow if the space
     # needs activation.
     space.active = True
     space.save()
-    space.make_space_database()
     session['slack_team'] = slack_team['team']['id']
     return redirect(url_for('routes.finished'))
 
