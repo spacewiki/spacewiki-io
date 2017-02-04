@@ -7,6 +7,8 @@ from flask import current_app, session, request, render_template, url_for, \
     Config, g
 from flask.globals import _request_ctx_stack
 from flask_login import current_user, login_user
+from flask_assets import Environment
+import os.path
 import peewee
 import spacewiki.app
 import spacewiki.model
@@ -79,6 +81,14 @@ class Dispatcher(object):
         # Install hooks
         space_app.register_blueprint(io_wrapper.BLUEPRINT)
         space_app.register_blueprint(io_common.BLUEPRINT)
+        ASSETS = Environment(space_app)
+        # Not sure why we need to load both these files. Upstream spacewiki
+        # should be already adding its own, but creating a new Environment seems
+        # to overwrite it.
+        ASSETS.from_yaml(os.path.sep.join((os.path.dirname(__file__),
+            "assets.yml")))
+        ASSETS.from_yaml(os.path.sep.join((os.path.dirname(spacewiki.app.__file__),
+            "assets.yml")))
 
         # Boot database
         if create_db:

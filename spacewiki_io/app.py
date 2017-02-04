@@ -7,13 +7,15 @@ from spacewiki.middleware import ReverseProxied
 from slacker import Slacker
 import peewee
 from raven.contrib.flask import Sentry
+import os.path
 
 def create_base_app(with_config=True):
     APP = Flask(__name__)
     if with_config:
         APP.config.from_object('spacewiki_io.settings')
     ASSETS = Environment(APP)
-    ASSETS.from_yaml("assets.yml")
+    ASSETS.from_yaml(os.path.sep.join((os.path.dirname(__file__),
+        "assets.yml")))
     APP.config.setdefault('IO_DOMAIN', 'dev.localhost')
     APP.config.setdefault('IO_SCHEME', 'http')
     APP.wsgi_app = ReverseProxied(APP.wsgi_app)

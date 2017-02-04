@@ -1,0 +1,5 @@
+spacewiki_io_css:
+  filters: libsass,cssmin
+  output: cache/spacewiki-io-app.css
+  contents:
+    - io_common/scss/spacewiki-io.scss
