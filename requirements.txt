@@ -8,4 +8,4 @@ stripe
 psycopg2
 raven[flask]
 flask-testing
-git+https://github.com/spacewiki/spacewiki@4161736#egg=spacewiki
+git+https://github.com/spacewiki/spacewiki@91f2be7#egg=spacewiki
