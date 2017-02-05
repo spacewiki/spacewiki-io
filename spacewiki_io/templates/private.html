@@ -12,7 +12,9 @@
     <div class="small-4 small-centered columns create-wiki">
       <p>The wiki you're looking for is private.
       <p>Login:
+      {% with state=requestedPath %}
       {% include "_signin.html" %}
+      {% endwith %}
     </div>
   </div>
 {% endblock %}

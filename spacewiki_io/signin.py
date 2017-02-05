@@ -23,8 +23,11 @@ def slack_login():
             port = ':'+req_host[1]
         else:
             port = ''
-        return redirect('%s://%s.%s/'%(current_app.config['IO_SCHEME'], space.domain,
-            current_app.config['IO_DOMAIN']+port))
+        requestedUrl = request.args.get('state', '')
+        if requestedUrl.startswith('/'):
+            requestedUrl = requestedUrl[1:]
+        return redirect('%s://%s.%s/%s'%(current_app.config['IO_SCHEME'], space.domain,
+            current_app.config['IO_DOMAIN']+port, requestedUrl))
     else:
         flash("Your team doesn't have a wiki yet!")
         return redirect(url_for('routes.index'))

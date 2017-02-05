@@ -18,4 +18,4 @@ def confirm_logged_in():
             pass
     if not current_user.is_authenticated:
         if not request.path.startswith('/static'):
-            return render_template('private.html'), 403
+            return render_template('private.html', requestedPath=request.path), 403
