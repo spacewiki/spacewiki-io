@@ -14,3 +14,10 @@ ADMIN_DB_URL = 'postgres:///spacewiki'
 SUBSPACE_DATABASE_NAME = 'spacewiki_site_%(slack_id)s'
 SUBSPACE_DATABASE_URL = 'postgres:///' + SUBSPACE_DATABASE_NAME
 SUBSPACE_UPLOAD_PATH = '/srv/spacewiki/uploads/%(domain)s'
+SUBSPACE_HEADER_INJECTION = """
+<script src="https://cdn.ravenjs.com/3.9.1/raven.min.js">
+</script>
+<script type="text/javascript">
+Raven.config('https://c310feb89d34481f91a9bb51bc7328bf@sentry.io/122996').install();
+</script>
+"""
